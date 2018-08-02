@@ -22,5 +22,5 @@ d.getFileContent("Test")
 d.backupJson("Test", "test.json")
 d.backupJson("Test", "test2.json")
 
-d.changelogLive("Test", "test.json")
-d.changelogLocal("test2.json", "test.json")
+d.changelogLive("test.json","Test")
+d.changelogLocal("test.json", "test2.json")

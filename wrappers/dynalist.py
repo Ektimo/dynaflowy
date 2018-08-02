@@ -43,6 +43,46 @@ class DynalistWrapper(object):
         rez["perm_text"] = [self.__permission[rez["permission"][i]] for i in range(len(rez["permission"]))]
         return rez
 
+    def __toDict(self, jsonContent):
+        rez = dict()
+        
+        for i in range(len(jsonContent)):
+            current = jsonContent[i]
+            if (current['id'] == 'root'):
+                jsonContent.remove(current)
+                rez['content'] = current['content']
+                rez['note'] = current['note']
+                rez['checked'] = current['checked']
+                rez['parent'] = 'root'
+                rez['children'] = self.__toDictRecursion(jsonContent, 'root', current['children'])
+                return rez
+
+        raise Exception("Root not found in jsonContent!")
+
+    def __toDictRecursion(self, jsonContent, parent, children):
+        rez = dict()
+
+        k = 0
+        while k < len(jsonContent):
+            current = jsonContent[k]
+            if (current['id'] not in children):
+                k += 1
+                continue
+            del jsonContent[k]
+            newDict = dict()
+            newDict['content'] = current['content']
+            newDict['note'] = current['note']
+            newDict['checked'] = current['checked']
+            newDict['parent'] = parent
+            if 'children' in current:
+                newDict['children'] = self.__toDictRecursion(jsonContent, current['id'], current['children'])
+                rez[current["id"]] = newDict
+            else: #end recursion
+                rez[current["id"]] = newDict
+
+        return rez
+
+
     def getFileContent(self, fileName):
         file_id = self.__files.loc[self.__files.title==fileName]
         file_id = file_id.iloc[0]["id"]
@@ -75,13 +115,22 @@ class DynalistWrapper(object):
             outfile.writelines(data)
         return True
 
-    def changelogLocal(self, localFile1, localFile2):
-        diffs = comparer.compare(localFile1, localFile2)
+    def changelogLocal(self, localFileOld, localFileNew):
+        data1 = open(localFileOld, 'r').read()
+        data2 = open(localFileNew, 'r').read()
+        data1 = json.loads(data1)
+        data2 = json.loads(data2)
+        
+        dataOld = self.__toDict(data1)
+        dataNew = self.__toDict(data2)
+        diffs = comparer.compare(dataOld, dataNew)
         return diffs
         
-    def changelogLive(self, fileName, localFileName):
+    def changelogLive(self, localFileNameOld, fileNameLiveNew):
         # pdb.set_trace()
-        data = self.getFileContent(fileName)
-        # data = json.dumps(data, indent=4)
-        diffs = comparer.compare(data, localFileName)
+        data = self.getFileContent(fileNameLiveNew)
+        data2 = open(localFileNameOld, 'r').read()
+        dataLive = self.__toDict(data)
+        dataFile = self.__toDict(json.loads(data2))
+        diffs = comparer.compare(dataFile,dataLive)
         return diffs
