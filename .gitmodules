@@ -1,0 +1,3 @@
+[submodule "jsoncompare"]
+	path = jsoncompare
+	url = https://github.com/Ektimo/jsoncompare
