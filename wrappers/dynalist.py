@@ -1,7 +1,8 @@
 import json
 import requests as r
 import pandas as pd
-# import pdb
+import jsoncompare.jsoncompare as comparer
+import pdb
 
 
 class DynalistWrapper(object):
@@ -68,10 +69,19 @@ class DynalistWrapper(object):
         return self.__files.loc[self.__files.type=="folder"]["title"].tolist()
         
     def backupJson(self, fileName, localFileName):
-        raise NotImplementedError()
+        data = self.getFileContent(fileName)
+        data = json.dumps(data, indent=4)
+        with open(localFileName, 'w') as outfile:
+            outfile.writelines(data)
+        return True
 
     def changelogLocal(self, localFile1, localFile2):
-        raise NotImplementedError()
+        diffs = comparer.compare(localFile1, localFile2)
+        return diffs
         
     def changelogLive(self, fileName, localFileName):
-        raise NotImplementedError()
+        # pdb.set_trace()
+        data = self.getFileContent(fileName)
+        # data = json.dumps(data, indent=4)
+        diffs = comparer.compare(data, localFileName)
+        return diffs

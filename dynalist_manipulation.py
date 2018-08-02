@@ -1,5 +1,8 @@
 import json
-from wrappers.dynalist import DynalistWrapper
+# from wrappers.dynalist import DynalistWrapper
+import wrappers.dynalist as dyna
+from importlib import reload
+reload(dyna)
 
 def readConfig(filename="config.json"):
     with open(filename) as json_data_file:
@@ -8,13 +11,16 @@ def readConfig(filename="config.json"):
 
 config = readConfig("config.json")
 
-d = DynalistWrapper(config["dynalistKey"])
+d = dyna.DynalistWrapper(config["dynalistKey"])
 
 d.listFolders()
 d.listFiles()
 d.listFiles(folder="Ektimo")
 
-d.getFileContent("TUS")
+d.getFileContent("Test")
 
-#TODO: implement
-d.backupJson("","")
+d.backupJson("Test", "test.json")
+d.backupJson("Test", "test2.json")
+
+d.changelogLive("Test", "test.json")
+d.changelogLocal("test2.json", "test.json")
