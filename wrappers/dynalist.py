@@ -6,6 +6,7 @@ import pdb
 
 
 class DynalistWrapper(object):
+    __webUrl = "https://dynalist.io/d/"
     __url_base = "https://dynalist.io/api/v1/"
     __permission = {
         0: "No access",
@@ -21,6 +22,9 @@ class DynalistWrapper(object):
 
     def __url(self, path):
         return self.__url_base + path
+
+    def __url_node(self, fileId, nodeId):
+        return self.__webUrl + fileId + "#z=" + nodeId
 
     def __init__(self, api_key):
         self.__api_key = api_key
