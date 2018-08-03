@@ -22,14 +22,14 @@ d.getFileContent("file123")
 ### Backups on disk as json files
 
 ```
-d.backupJson("fileName", "local.fileName")
+d.backupJson("fileName.Live", "local.fileName")
 ```
 
 ### Changelog between files
 
 ```
-d.changelogLocal("local.file1","local.file2")
-d.changelogLive("fileName","local.fileName")
+d.changelogLocal("local.file.old","local.file.new")
+d.changelogLive("local.file.old","fileName.Live")
 ```
 
 # Workflowy wrapper
