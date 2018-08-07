@@ -23,8 +23,13 @@ class DynalistWrapper(object):
     def __url(self, path):
         return self.__url_base + path
 
-    def __url_node(self, fileId, nodeId):
-        return self.__webUrl + fileId + "#z=" + nodeId
+    def webURLNode(self, fileName, nodeId=None):
+        fileId = self.__files.loc[self.__files.title==fileName]
+        fileId = fileId.iloc[0]["id"]
+        if nodeId is None:
+            return self.__webUrl + fileId
+        else:
+            return self.__webUrl + fileId + "#z=" + nodeId
 
     def __init__(self, api_key):
         self.__api_key = api_key
@@ -88,9 +93,12 @@ class DynalistWrapper(object):
 
 
     def getFileContent(self, fileName):
-        file_id = self.__files.loc[self.__files.title==fileName]
-        file_id = file_id.iloc[0]["id"]
-        # pdb.set_trace()
+        try:
+            file_id = self.__files.loc[self.__files.title==fileName]
+            file_id = file_id.iloc[0]["id"]
+        except:
+            raise Exception('File {} not found! Check your fileName!'.format(fileName))
+        
         content = r.post(
             self.__url("doc/read"),
             json=self.__json_data(fileId=file_id)
@@ -114,27 +122,34 @@ class DynalistWrapper(object):
         
     def backupJson(self, fileName, localFileName):
         data = self.getFileContent(fileName)
+        dataRet = data
         data = json.dumps(data, indent=4)
         with open(localFileName, 'w') as outfile:
             outfile.writelines(data)
-        return True
+        
+        #returns content of a file
+        return dataRet
 
     def changelogLocal(self, localFileOld, localFileNew):
         data1 = open(localFileOld, 'r').read()
         data2 = open(localFileNew, 'r').read()
         data1 = json.loads(data1)
         data2 = json.loads(data2)
+        dataO = data1.copy()
+        dataN = data2.copy()
         
         dataOld = self.__toDict(data1)
         dataNew = self.__toDict(data2)
         diffs = comparer.compare(dataOld, dataNew)
-        return diffs
+        return [dataO, dataN, diffs] #return old,new,diffs
         
     def changelogLive(self, localFileNameOld, fileNameLiveNew):
-        # pdb.set_trace()
         data = self.getFileContent(fileNameLiveNew)
+        dataN = data.copy()
         data2 = open(localFileNameOld, 'r').read()
+        dataFile = json.loads(data2)
+        dataO = dataFile.copy()
         dataLive = self.__toDict(data)
-        dataFile = self.__toDict(json.loads(data2))
+        dataFile = self.__toDict(dataFile)
         diffs = comparer.compare(dataFile,dataLive)
-        return diffs
+        return [dataO, dataN, diffs] #return old,new,diffs
