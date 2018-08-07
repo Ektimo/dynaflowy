@@ -22,7 +22,7 @@ def getContent(fileContent, nodeId, property='content', maxChar = 100):
                     return rez
                 else: #in case of string we return maxChar len string
                     if len(rez) > maxChar:
-                        return rez[:maxChar]+' ...'
+                        return rez[:maxChar]+'...'
                     else:
                         return rez
             except:
@@ -104,24 +104,24 @@ def parseDiff(dynaWrapper, dictDiff, oldContent, newContent, fileName, numBullet
 def slackMessageFormatter(fileName, diff):
     if diff['type'] == 'ADDED':
         attach={
-            "pretext": "Path - {}".format(diff['path']),
-            "title": "ADDED",
+            # "pretext": "Path - {}".format(diff['path']),
+            "title": "ADDED - {}".format(diff['path']),
             "title_link": diff['link'],
             "text": "- {}\nwith {} children".format(diff['content'],diff['numChild']),
             "color": "good"
         }
     elif diff['type'] == 'REMOVED':
         attach={
-            "pretext": "Path - {}".format(diff['path']),
-            "title": "REMOVED",
+            # "pretext": "Path - {}".format(diff['path']),
+            "title": "REMOVED - {}".format(diff['path']),
             "title_link": diff['link'],
             "text": "- {}\nwith {} children".format(diff['content'],diff['numChild']),
             "color": "danger"
         }
     elif diff['type'] == 'CHANGED-content':
         attach={
-            "pretext": "Path - {}".format(diff['path']),
-            "title": "CHANGED CONTENT",
+            # "pretext": "Path - {}".format(diff['path']),
+            "title": "CHANGED CONTENT - {}".format(diff['path']),
             "title_link": diff['link'],
             "fields":[
                 {
@@ -134,8 +134,8 @@ def slackMessageFormatter(fileName, diff):
         }
     elif diff['type'] == 'CHANGED-notes':
         attach={
-            "pretext": "Path - {}".format(diff['path']),
-            "title": "CHANGED NOTES",
+            # "pretext": "Path - {}".format(diff['path']),
+            "title": "CHANGED NOTES - {}".format(diff['path']),
             "title_link": diff['link'],
             "fields":[
                 {
@@ -153,8 +153,8 @@ def slackMessageFormatter(fileName, diff):
         }
     elif diff['type'] == 'CHANGED-checked':
         attach={
-            "pretext": "Path - {}".format(diff['path']),
-            "title": "CHANGED CHECKED",
+            # "pretext": "Path - {}".format(diff['path']),
+            "title": "CHANGED CHECKED - {}".format(diff['path']),
             "title_link": diff['link'],
             "fields":[
                 {
@@ -226,4 +226,4 @@ rez = parseDiff(d,diffs,old,new,"Test")
 #########################        
 
 # slack = Slacker(config['slackbot'])
-# postToSlack(slack, rez, "#testslacker")
+# postToSlack(slack, "Test", rez, "#testslacker")
