@@ -1,4 +1,6 @@
 import json
+import time
+import os.path as p
 # from wrappers.dynalist import DynalistWrapper
 import wrappers.dynalist as dyna
 from slacker import Slacker
@@ -11,6 +13,33 @@ def readConfig(filename="config.json"):
         data = json.load(json_data_file)
     return data
 
+def getLocalFileName(folder, f):
+    t = time.strftime("%Y-%m-%d %H-%M",time.localtime())
+    fullName = "{}/{}_{}.json".format(folder, f, t)
+    i = 0
+    exists = p.isfile(fullName)
+    while  exists:
+        i += 1
+        fullName = "{}/{}_{}_{}.json".format(folder, f, t,i)
+        exists = p.isfile(fullName)
+    return fullName
+
+def backupListOfFiles(dyna, fileList, folder):
+    liveList = dyna.listFiles()
+    rezDict = {}
+    for f in liveList:
+        #if not on list, go to next one
+        if f not in fileList:
+            continue
+        localFileName = getLocalFileName(folder,f)
+        try:
+            dyna.backupJson(f, localFileName)
+            rezDict[f] = localFileName
+        except:
+            rezDict[f] = "ERROR: backup failed!"
+        time.sleep(1) #delay for dynalist getter
+    return rezDict
+    
 def getContent(fileContent, nodeId, property='content', maxChar = 100):
     for i in range(len(fileContent)):
         if fileContent[i]['id'] == nodeId:
@@ -191,6 +220,7 @@ def postToSlack(slack, fileName, diffs, channel):
                 as_user=True
             )
             attach = [] #reset queue
+            time.sleep(1) #sleep to not exceed the posting limit in slack
     #there are messages to post
     if len(attach)>0: 
         slack.chat.post_message(channel=channel,
@@ -218,6 +248,8 @@ old,new,diffs = d.changelogLive("test2.json","Test")
 old,new,diffs = d.changelogLocal("test.json", "test2.json")
 
 rez = parseDiff(d,diffs,old,new,"Test")
+
+backupListOfFiles(d,config["backup"]["files"],config["backup"]["location"])
 
 #########################
 ###

@@ -1,5 +1,9 @@
 {
     "dynalistKey": "<type your key>",
     "workflowyKey": "<type your key>",
-    "slackbot": "<type your key>"
+    "slackbot": "<type your key>",
+    "backup": {
+        "location": "<folder on disk>",
+        "files": ["<fileName1>","<fileName2>"]
+    }
 }

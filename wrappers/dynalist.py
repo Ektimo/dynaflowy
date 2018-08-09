@@ -121,13 +121,16 @@ class DynalistWrapper(object):
         return self.__files.loc[self.__files.type=="folder"]["title"].tolist()
         
     def backupJson(self, fileName, localFileName):
-        data = self.getFileContent(fileName)
-        dataRet = data
-        data = json.dumps(data, indent=4)
-        with open(localFileName, 'w') as outfile:
-            outfile.writelines(data)
-        
-        #returns content of a file
+        try:
+            data = self.getFileContent(fileName)
+            dataRet = data
+            data = json.dumps(data, indent=4)
+            with open(localFileName, 'w') as outfile:
+                outfile.writelines(data)
+            
+            #returns content of a file
+        except Exception as e:
+            raise e
         return dataRet
 
     def changelogLocal(self, localFileOld, localFileNew):
