@@ -32,6 +32,14 @@ d.changelogLocal("local.file.old","local.file.new")
 d.changelogLive("local.file.old","fileName.Live")
 ```
 
+# Automatic integration of changes to Slack
+
+With ChangelogMessenger it is possible to just run crontabJob and get the changelog with previous version to Slack. All you need to do is (assuming you have the config file changelogMessenger set):
+
+```
+clm.liveChangesToSlack()
+```
+
 # Workflowy wrapper
 
 **TODO**

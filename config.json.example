@@ -5,5 +5,12 @@
     "backup": {
         "location": "<folder on disk>",
         "files": ["<fileName1>","<fileName2>"]
+    },
+    "changelogMessenger": { 
+        "backupBase": "ektimo_",
+        "channelMapper": [
+            {"file":"<fileName1>", "channel": "<#channelName1>"},
+            {"file":"<fileName2>", "channel": "<#channelName2>"}
+        ]
     }
 }
