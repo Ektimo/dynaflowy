@@ -3,3 +3,5 @@ wrappers/__pycache__
 test*.json
 backup/*
 /__pycache__
+__pycache__/*
+

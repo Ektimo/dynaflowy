@@ -6,6 +6,8 @@ from slacker import Slacker
 import wrappers.dynalist as dyna
 from helpers import getLocalFileName
 
+import pdb
+
 class ChangelogMessenger:
     __backupBase = ""
     __backupFolder = ""
@@ -62,7 +64,7 @@ class ChangelogMessenger:
 
     def __pathToBullets(self, fileName,path,fileContent,numBullets=3):
         #root is the parent
-        if (len(path) <= 3) | (numBullets < 1):
+        if (len(path) < 3) | (numBullets < 1):
             return fileName
         pathIDs = [x for x in path if x not in ["children","content","note","checked"]]
         #take max numBullets
@@ -151,13 +153,15 @@ class ChangelogMessenger:
             }
         return attach
 
-    def __parseDiff(self, dictDiff, oldContent, newContent, fileName, numBullets=3):
+    def parseDiff(self, dictDiff, oldContent, newContent, fileName, numBullets=3):
         parsedDiff = []
         for i in range(len(dictDiff)):
             prop = None
             dictDiff_i = dictDiff[i]
             path = dictDiff_i["message"]["path"]
             splitPath = path.split('.')
+            # if dictDiff_i["type"] == "ADDED":
+            #     pdb.set_trace()
             #changes in document root - only note parsed
             if len(splitPath) < 2: 
                 if splitPath[0] == 'note':
@@ -249,6 +253,6 @@ class ChangelogMessenger:
                 continue #nothing to compare
             foi.sort()
             old,new,diffs = self.__dynalist.changelogLocal(foi[-2], foi[-1]) #compare last two entries
-            rez = self.__parseDiff(diffs,old,new,fileName)
+            rez = self.parseDiff(diffs,old,new,fileName)
             if (len(rez)>0):
                 self.__postToSlack(fileName, rez, x["channel"])        
