@@ -27,6 +27,8 @@ old,new,diffs = d.changelogLive("test.json","Test")
 old,new,diffs = d.changelogLive("test2.json","Test")
 old,new,diffs = d.changelogLocal("test.json", "test2.json")
 
+TODOS = d.filterTags("Test", ["@ro"], ["#todo"])
+
 #########################
 ###
 ### slack integration
