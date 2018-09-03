@@ -73,10 +73,15 @@ class DynalistWrapper(object):
         rez = dict()
 
         k = 0
-        while k < len(jsonContent):
+        maxPass = 2
+        currentPass = 0
+        while (len(jsonContent) > 0) and (currentPass < maxPass): #we must empty the initial data
+            k = k % len(jsonContent) #what if deleted the last one
             current = jsonContent[k]
             if (current['id'] not in children):
-                k += 1
+                k = (k+1)%len(jsonContent) # to recycle trough data
+                if (k == 0):
+                    currentPass += 1
                 continue
             del jsonContent[k]
             newDict = dict()
