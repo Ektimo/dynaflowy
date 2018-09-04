@@ -185,7 +185,7 @@ class DynalistWrapper(object):
             raise e
         return dataRet
 
-    def changelogLocal(self, localFileOld, localFileNew):
+    def changelogLocal(self, localFileOld, localFileNew, caseSensitive=True):
         data1 = open(localFileOld, 'r').read()
         data2 = open(localFileNew, 'r').read()
         data1 = json.loads(data1)
@@ -195,10 +195,10 @@ class DynalistWrapper(object):
         
         dataOld = self.__toDict(data1)
         dataNew = self.__toDict(data2)
-        diffs = comparer.compare(dataOld, dataNew)
+        diffs = comparer.compare(dataOld, dataNew, caseSensitive)
         return [dataO, dataN, diffs] #return old,new,diffs
         
-    def changelogLive(self, localFileNameOld, fileNameLiveNew):
+    def changelogLive(self, localFileNameOld, fileNameLiveNew, caseSensitive=True):
         data = self.getFileContent(fileNameLiveNew)
         dataN = data.copy()
         data2 = open(localFileNameOld, 'r').read()
@@ -206,7 +206,7 @@ class DynalistWrapper(object):
         dataO = dataFile.copy()
         dataLive = self.__toDict(data)
         dataFile = self.__toDict(dataFile)
-        diffs = comparer.compare(dataFile,dataLive)
+        diffs = comparer.compare(dataFile, dataLive, caseSensitive)
         return [dataO, dataN, diffs] #return old,new,diffs
 
     def filterTags(self, fileName, userTags=None, actionTags=None, checkNotes=False):

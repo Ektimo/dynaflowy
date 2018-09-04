@@ -239,7 +239,7 @@ class ChangelogMessenger:
     def backupFiles(self):
         return self.__backupListOfFiles(self.__backupFileNames, self.__backupFolder)
     
-    def liveChangesToSlack(self):
+    def liveChangesToSlack(self, caseSensitive=True):
         self.backupFiles()
         files = []
         for f in os.listdir(self.__backupFolder):
@@ -252,7 +252,7 @@ class ChangelogMessenger:
             if len(foi) < 2:
                 continue #nothing to compare
             foi.sort()
-            old,new,diffs = self.__dynalist.changelogLocal(foi[-2], foi[-1]) #compare last two entries
+            old,new,diffs = self.__dynalist.changelogLocal(foi[-2], foi[-1], caseSensitive) #compare last two entries
             rez = self.parseDiff(diffs,old,new,fileName)
             if (len(rez)>0):
                 self.__postToSlack(fileName, rez, x["channel"])        

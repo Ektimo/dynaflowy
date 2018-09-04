@@ -41,7 +41,8 @@ fileBase = config["backup"]["location"]+"/"+config["changelogMessenger"]["backup
 old,new,diffs = d.changelogLocal(fileBase+"_2018-08-20 09-00.json", fileBase+"_2018-08-20 12-00.json")
 
 fileBase = config["backup"]["location"]+"/"+config["changelogMessenger"]["backupBase"]+config["backup"]["files"][5]
-old,new,diffs = d.changelogLocal(fileBase+"_2018-09-03 09-00.json", fileBase+"_2018-09-03 12-00.json")
+old,new,diffs = d.changelogLocal(fileBase+"_2018-09-03 09-00.json", fileBase+"_2018-09-03 12-00.json", True)
+old,new,diffs = d.changelogLocal(fileBase+"_2018-09-03 09-00.json", fileBase+"_2018-09-03 12-00.json", False)
 
 
 rez = dts.parseDiff(diffs,old,new,config["backup"]["files"][2])

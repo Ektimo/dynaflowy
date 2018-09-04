@@ -5,4 +5,4 @@ config = readConfig("config.json")
 
 clm = ChangelogMessenger(config["slackbot"], config["dynalistKey"], config["changelogMessenger"]["backupBase"], config["backup"]["location"], config["backup"]["files"], config["changelogMessenger"]["channelMapper"])
 
-clm.liveChangesToSlack()
+clm.liveChangesToSlack(caseSensitive=False)
