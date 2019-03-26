@@ -60,9 +60,18 @@ class DynalistWrapper(object):
             current = jsonContent[i]
             if (current['id'] == 'root'):
                 jsonContent.remove(current)
-                rez['content'] = current['content']
-                rez['note'] = current['note']
-                rez['checked'] = current['checked']
+                try:
+                    rez['content'] = current['content']
+                except:
+                    rez['content'] = ''
+                try:
+                    rez['note'] = current['note']
+                except:
+                    rez['note'] = ''
+                try:
+                    rez['checked'] = current['checked']
+                except:
+                    rez['checked'] = False
                 rez['parent'] = 'root'
                 rez['children'] = self.__toDictRecursion(jsonContent, 'root', current['children'])
                 return rez
@@ -85,9 +94,18 @@ class DynalistWrapper(object):
                 continue
             del jsonContent[k]
             newDict = dict()
-            newDict['content'] = current['content']
-            newDict['note'] = current['note']
-            newDict['checked'] = current['checked']
+            try:
+                newDict['content'] = current['content']
+            except:
+                newDict['content'] = ''
+            try:
+                newDict['note'] = current['note']
+            except:
+                newDict['note'] = ''
+            try:
+                newDict['checked'] = current['checked']
+            except:
+                newDict['checked'] = False
             newDict['parent'] = parent
             if 'children' in current:
                 newDict['children'] = self.__toDictRecursion(jsonContent, current['id'], current['children'])
